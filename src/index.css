@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Centralized Theme Tokens for NOIR */
+  --color-background: #EDECEA;  /* Warm Off-White (outside boxes / page background) */
+  --color-secondary: #7E9A82;   /* Sage Green (inside boxes / cards / containers) */
+  --color-text: #432f2e;        /* Dark Brown (ALL text / typography) */
+
+  --bg-primary: var(--color-background);
+  --accent-secondary: var(--color-secondary);
+  --text-primary: var(--color-text);
+  
+  --border-color: rgba(67, 47, 46, 0.25);
+  --border-strong: rgba(67, 47, 46, 0.45);
+  --gold-alert: #d4af37;        /* Special full-screen gold alert for "It's your turn!" */
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Gujarati', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure all typography uses dark brown (#432f2e) */
+h1, h2, h3, h4, h5, h6, p, span, label, input, select, textarea, button {
+  color: var(--color-text);
+}
+
+::selection {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+/* Pulse animation for "It's your turn!" notification */
+@keyframes turnPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 35px 8px rgba(212, 175, 55, 0.4);
+  }
+}
+
+.animate-turn-pulse {
+  animation: turnPulse 2s infinite ease-in-out;
+}
