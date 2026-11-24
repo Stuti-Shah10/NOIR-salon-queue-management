@@ -27,7 +27,6 @@ export default function CustomerLiveStatus() {
     setCustomerInChair
   } = useQueue();
 
-  const [simulateTurn, setSimulateTurn] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState(null);
 
@@ -47,7 +46,7 @@ export default function CustomerLiveStatus() {
   const positionInLine = waitingIndex >= 0 ? waitingIndex + 1 : 1;
   const isSecondInLine = positionInLine === 2;
   const isInChair = customer.status === 'in_chair';
-  const isTurn = (customer.status === 'called' || simulateTurn) && !isInChair;
+  const isTurn = customer.status === 'called' && !isInChair;
 
   // Dynamic wait time calculated using services ahead ÷ working barbers
   const estimatedWaitMinutes = getCustomerWaitTime(customer.token);
@@ -72,7 +71,6 @@ export default function CustomerLiveStatus() {
     setCustomerInChair(customer.token);
     const assignedName = customer.assignedBarber || customer.barber || 'your barber';
     setFeedbackMessage(`You're seated! Service with ${assignedName} has started.`);
-    setSimulateTurn(false);
   };
 
   const handleConfirmCancel = () => {
@@ -96,12 +94,6 @@ export default function CustomerLiveStatus() {
             <Sparkles className="w-4 h-4 fill-current" />
             <span>NOIR</span>
           </span>
-          <button
-            onClick={() => setSimulateTurn(false)}
-            className="px-3 py-1 bg-[#432f2e] text-[#EDECEA] rounded-full text-[10px] font-black cursor-pointer shadow-md hover:opacity-90"
-          >
-            Exit Preview
-          </button>
         </div>
 
         {/* Central Exciting Notification Container with Gentle Pulse */}
@@ -305,21 +297,9 @@ export default function CustomerLiveStatus() {
           </span>
         </div>
 
-        {/* Interactive Simulation Button for Testing "It's your turn!" & Spot Actions */}
-        <div className="pt-2 border-t border-[#432f2e]/20 space-y-2">
-          
-          {/* Simulate "It's Your Turn" Button Styled with Sage Green #7E9A82 bg and #432f2e text */}
-          <button
-            onClick={() => setSimulateTurn(true)}
-            disabled={isInChair}
-            className="w-full py-3 bg-[#7E9A82] hover:bg-[#6c8670] active:bg-[#5f7762] disabled:opacity-40 disabled:cursor-not-allowed text-[#432f2e] font-black rounded-2xl text-xs flex items-center justify-center space-x-2 border-2 border-[#432f2e] shadow-sm cursor-pointer transition-all active:scale-98"
-          >
-            <Sparkles className="w-4 h-4 fill-[#432f2e]" />
-            <span>Simulate: Test "It's Your Turn!" Screen</span>
-          </button>
-
-          {/* Cancel My Spot Button */}
-          {!isInChair && (
+        {/* Cancel My Spot Button */}
+        {!isInChair && (
+          <div className="pt-2 border-t border-[#432f2e]/20">
             <button
               onClick={() => setShowCancelModal(true)}
               className="w-full py-2.5 bg-[#EDECEA] hover:bg-[#e2e1de] text-[#432f2e] border-2 border-[#432f2e]/40 font-bold rounded-2xl text-xs flex items-center justify-center space-x-1.5 cursor-pointer transition-all"
@@ -327,8 +307,8 @@ export default function CustomerLiveStatus() {
               <XCircle className="w-3.5 h-3.5 stroke-[#432f2e]" />
               <span>Cancel My Spot in Queue</span>
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
       </div>
 

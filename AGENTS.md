@@ -1,41 +1,102 @@
-# AGENTS.md — NOIR Salon Queue Management
-Queue app for NOIR salon: customers join from their phone, see wait
-time, get called; reception and barbers manage the queue; TV display.
+# AGENTS.md — NOIR Salon Queue Management System
 
-## Read first
-- docs/01-brief.md -> features + what NOT to build
-- docs/02-screens.md -> every screen's layout and behaviour
-- docs/03-flows-rules.md -> flows, queue rules, test checklist
+NOIR is a salon queue management application where customers can join the queue using their phones, track their waiting status, and receive turn notifications. Receptionists and barbers manage the queue, while a TV display shows live queue information.
 
-## Stack
-React + Vite + Tailwind CSS. Run with `npm run dev`.
-Choose the simplest storage that keeps phone, tablet and TV in sync
-(explain your choice before using it).
-Hosting: Vercel (frontend); Render or Railway if a backend is needed.
-Live link must be the first line after the title in README.md.
+## Read First
 
-## How to work
-- One screen or one feature per task. Don't touch other screens.
-- All labels via the EN/GU language file; no hard-coded text.
-- Queue rules live in ONE place in the code; reuse them everywhere.
-- Never add features from the 'Don't build' list.
-- After each task: list changed files and how to test the change.
+- `docs/01-brief.md` → Project goals, features, and what NOT to build.
+- `docs/02-screens.md` → All seven screens, layouts, and behaviour.
+- `docs/03-flows-rules.md` → Customer flows, queue rules, and test checklist.
 
-## Theme & Design System
-- **Color Scheme:**
-  - **Outside the boxes:** `#EDECEA` (Warm Off-White) as the main page background and spaces surrounding cards and containers.
-  - **Inside the boxes:** `#7E9A82` (Sage Green) as the background color inside the boxes, cards, content containers, sections and UI boxes.
-  - **All font/text colors:** `#432f2e` (Dark Brown) for all headings, body text, labels, navigation items, buttons, and typography.
-- Rounded cards, clean spacing, good contrast, and readability. Do not introduce unnecessary additional colors.
-- **Centralized CSS Variables:**
-  Implement and reference centralized design tokens using CSS variables:
-  ```css
-  :root {
-    --color-background: #EDECEA;
-    --color-secondary: #7E9A82;
-    --color-text: #432f2e;
-  }
-  ```
-  All components must use these variables or mapped theme tokens rather than hardcoded hex color values, so the entire application's theme can be changed in one place.
-- **Special Screen Instruction:**
-  The "It's your turn!" screen should have a special full-screen gold emphasis with dark brown text, large typography, and a gentle pulse animation. The rest of the application must follow the normal three-color theme.
+## Current Technology Stack
+
+- **Frontend:** React + Vite + Tailwind CSS.
+- **Development Server:** Run using `npm run dev`.
+- **Current Data:** The existing frontend uses its current data handling and storage implementation. Inspect the code before changing it.
+- **Current Status:** The frontend is built, but PostgreSQL and the production backend have not yet been integrated.
+
+## Planned Backend Architecture
+
+The following architecture is planned for a future implementation:
+
+- **Backend:** Node.js + Express.
+- **Database:** PostgreSQL.
+- **Database Connection:** `pg` (node-postgres).
+- **Real-Time Synchronization:** Socket.IO.
+- **Hosting:** Vercel for the frontend; Render or Railway for the backend and database.
+
+Implementation rules for the planned backend:
+
+- Frontend must communicate with the backend through APIs.
+- Never connect directly to PostgreSQL from frontend code.
+- Store database credentials and secrets in backend environment variables.
+- Never commit `.env` files or expose secrets in frontend code.
+- Implement authentication and role-based authorization on the backend.
+
+Do not claim that planned backend features are implemented until they have actually been developed and tested.
+
+## Hosting and Submission
+
+- Deploy the existing frontend so that it can be accessed through a public link.
+- The live application link must be the first line after the project title in `README.md`.
+- The deployed application must work on mobile devices without requiring local development setup.
+- Keep the GitHub repository updated with the final project files.
+
+## How to Work
+
+- Work on one screen or one feature at a time.
+- Do not modify unrelated screens or files.
+- All interface labels must use the English/Gujarati language files.
+- Avoid hardcoding interface text directly into components.
+- Keep queue rules centralized in the code and reuse them wherever needed.
+- Never add features from the `Don't build` list in `docs/01-brief.md`.
+- Preserve existing working functionality when making changes.
+- After each task, list the changed files and explain how to test the changes.
+
+## Theme and Design System
+
+Use the official NOIR colour palette throughout the application:
+
+- **Outer Background:** `#EDECEA` (Warm Off-White).
+- **Cards and Inner Boxes:** `#7E9A82` (Sage Green).
+- **Text:** `#432f2e` (Dark Brown).
+
+Design guidelines:
+
+- Use rounded cards, clean spacing, good contrast, and readable typography.
+- Do not introduce unnecessary additional colours.
+- The "It's your turn!" notification screen must also follow the NOIR colour palette.
+- Do not use the outdated gold or charcoal colour scheme.
+
+### Centralized CSS Variables
+
+Use centralized design tokens so the theme can be maintained in one place:
+
+```css
+:root {
+  --color-background: #EDECEA;
+  --color-secondary: #7E9A82;
+  --color-text: #432f2e;
+}
+```
+
+All components should use these variables or mapped theme tokens instead of repeatedly hardcoding colour values.
+
+## Security and Access Control
+
+The following access restrictions are required for the completed application:
+
+- Home, Join Queue, and public Waiting Area TV screens are publicly accessible.
+- Customers access their queue status using a valid queue token.
+- Reception Dashboard requires receptionist authentication.
+- Barber View requires individual barber authentication.
+- Owner Settings/Admin is restricted to the salon owner.
+
+Security implementation requirements:
+
+- Verify authentication and user roles on the backend for every protected API request.
+- Do not rely only on hiding frontend routes, navigation items, or buttons.
+- Never store passwords or PINs in plain text.
+- Do not expose authentication secrets or database credentials in frontend code.
+
+Do not claim staff authentication or backend security is complete until it has been implemented and tested.
