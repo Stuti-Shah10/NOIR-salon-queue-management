@@ -45,13 +45,6 @@ export const INITIAL_BARBERS = [
   },
 ];
 
-// Helper to generate a timestamp for today at specific hours/minutes
-export function getTodayTimestamp(hours = 9, minutes = 0) {
-  const d = new Date();
-  d.setHours(hours, minutes, 0, 0);
-  return d.getTime();
-}
-
 // Check if a given completion timestamp occurred on the current date
 export function isCompletedToday(completedTime) {
   if (!completedTime) return false;
@@ -92,44 +85,17 @@ export function getClientsServedToday(customers) {
   return countedTokens.size;
 }
 
-// 18 Initial client records served earlier today
-const INITIAL_SERVED_TODAY = [
-  { token: 'S-01', name: 'Jayesh Dave', phone: '9825001122', services: ['Haircut'], serviceMinutes: 30, barber: 'Ravi', chair: 'Chair 1', status: 'done', completedTime: getTodayTimestamp(9, 15) },
-  { token: 'S-02', name: 'Pooja Shah', phone: '9825002233', services: ['Hair spa'], serviceMinutes: 45, barber: 'Amit', chair: 'Chair 2', status: 'done', completedTime: getTodayTimestamp(9, 25) },
-  { token: 'S-03', name: 'Rohan Mehra', phone: '9825003344', services: ['Beard trim'], serviceMinutes: 15, barber: 'Imran', chair: 'Chair 3', status: 'done', completedTime: getTodayTimestamp(9, 30) },
-  { token: 'S-04', name: 'Ankit Sharma', phone: '9825004455', services: ['Haircut', 'Shave & Detan'], serviceMinutes: 55, barber: 'Ravi', chair: 'Chair 1', status: 'done', completedTime: getTodayTimestamp(9, 45) },
-  { token: 'S-05', name: 'Devendra Parikh', phone: '9825005566', services: ['Haircut'], serviceMinutes: 30, barber: 'Amit', chair: 'Chair 2', status: 'done', completedTime: getTodayTimestamp(9, 50) },
-  { token: 'S-06', name: 'Sameer Khan', phone: '9825006677', services: ['Head Massage'], serviceMinutes: 20, barber: 'Imran', chair: 'Chair 3', status: 'done', completedTime: getTodayTimestamp(10, 0) },
-  { token: 'S-07', name: 'Nitin Bhatt', phone: '9825007788', services: ['Haircut'], serviceMinutes: 30, barber: 'Ravi', chair: 'Chair 1', status: 'done', completedTime: getTodayTimestamp(10, 10) },
-  { token: 'S-08', name: 'Chirag Soni', phone: '9825008899', services: ['Beard trim'], serviceMinutes: 15, barber: 'Amit', chair: 'Chair 2', status: 'done', completedTime: getTodayTimestamp(10, 15) },
-  { token: 'S-09', name: 'Hiren Vora', phone: '9825009900', services: ['Hair spa'], serviceMinutes: 45, barber: 'Imran', chair: 'Chair 3', status: 'done', completedTime: getTodayTimestamp(10, 25) },
-  { token: 'S-10', name: 'Tejas Panchal', phone: '9825010011', services: ['Haircut'], serviceMinutes: 30, barber: 'Ravi', chair: 'Chair 1', status: 'done', completedTime: getTodayTimestamp(10, 30) },
-  { token: 'W-01', name: 'Kartik Solanki', phone: '9825011122', services: ['Shave & Detan'], serviceMinutes: 25, barber: 'Amit', chair: 'Chair 2', status: 'done', completedTime: getTodayTimestamp(10, 35) },
-  { token: 'W-02', name: 'Alok Verma', phone: '9825012233', services: ['Haircut'], serviceMinutes: 30, barber: 'Imran', chair: 'Chair 3', status: 'done', completedTime: getTodayTimestamp(10, 40) },
-  { token: 'W-03', name: 'Pratik Desai', phone: '9825013344', services: ['Head Massage'], serviceMinutes: 20, barber: 'Ravi', chair: 'Chair 1', status: 'done', completedTime: getTodayTimestamp(10, 45) },
-  { token: 'W-04', name: 'Kashyap Pandya', phone: '9825014455', services: ['Haircut'], serviceMinutes: 30, barber: 'Amit', chair: 'Chair 2', status: 'done', completedTime: getTodayTimestamp(10, 50) },
-  { token: 'W-05', name: 'Chetan Raval', phone: '9825015566', services: ['Beard trim'], serviceMinutes: 15, barber: 'Imran', chair: 'Chair 3', status: 'done', completedTime: getTodayTimestamp(10, 55) },
-  { token: 'W-06', name: 'Dhaval Thakkar', phone: '9825016677', services: ['Haircut'], serviceMinutes: 30, barber: 'Ravi', chair: 'Chair 1', status: 'done', completedTime: getTodayTimestamp(11, 0) },
-  { token: 'W-07', name: 'Gaurav Zala', phone: '9825017788', services: ['Hair spa'], serviceMinutes: 45, barber: 'Amit', chair: 'Chair 2', status: 'done', completedTime: getTodayTimestamp(11, 5) },
-  { token: 'W-08', name: 'Mahesh Shukla', phone: '9825018899', services: ['Haircut', 'Head Massage'], serviceMinutes: 50, barber: 'Imran', chair: 'Chair 3', status: 'done', completedTime: getTodayTimestamp(11, 10) },
-];
+// Known mock/seed token IDs that were injected in v5 and v6.
+// Used during migration to strip them from saved localStorage data.
+const MOCK_SEED_TOKENS = new Set([
+  'S-01','S-02','S-03','S-04','S-05','S-06','S-07','S-08','S-09','S-10',
+  'W-01','W-02','W-03','W-04','W-05','W-06','W-07','W-08',
+  'Y-01', // yesterday mock record
+]);
 
+// Clean initial customer list — no fake completed records.
+// A fresh install starts with 0 clients served today.
 export const INITIAL_CUSTOMERS = [
-  // 18 records served today
-  ...INITIAL_SERVED_TODAY,
-
-  // 1 client record completed yesterday (must be excluded from today's count)
-  {
-    token: 'Y-01',
-    name: 'Sanjay Rawal (Yesterday)',
-    phone: '9825090001',
-    services: ['Haircut'],
-    serviceMinutes: 30,
-    barber: 'Ravi',
-    chair: 'Chair 1',
-    status: 'done',
-    completedTime: Date.now() - 26 * 60 * 60 * 1000,
-  },
 
   // 1 customer currently in chair with Ravi
   {
@@ -228,9 +194,9 @@ export const INITIAL_CUSTOMERS = [
   },
 ];
 
-const STORAGE_KEY = 'noir_salon_state_v6';
-const USER_TOKEN_KEY = 'noir_user_token_v6';
-const CHANNEL_NAME = 'noir_salon_sync_channel_v6';
+const STORAGE_KEY = 'noir_salon_state_v7';
+const USER_TOKEN_KEY = 'noir_user_token_v7';
+const CHANNEL_NAME = 'noir_salon_sync_channel_v7';
 
 // Helper to play luxury harmonic chime
 export function playChimeSound() {
@@ -271,7 +237,9 @@ export function triggerVibration() {
 }
 
 export function QueueProvider({ children }) {
-  // Load initial persistent state or defaults
+  // Load initial persistent state or defaults.
+  // Migration path: v7 → v6 → v5 (oldest). When reading older versions,
+  // strip the 18 known mock-seed tokens so they never pollute the counter.
   const getInitialState = () => {
     if (typeof window === 'undefined') {
       return {
@@ -283,21 +251,25 @@ export function QueueProvider({ children }) {
       };
     }
     try {
-      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('noir_salon_state_v5');
+      const saved =
+        localStorage.getItem(STORAGE_KEY) ||
+        localStorage.getItem('noir_salon_state_v6') ||
+        localStorage.getItem('noir_salon_state_v5');
+
       if (saved) {
         const parsed = JSON.parse(saved);
-        
-        // Auto-migration: Ensure stored customers contain the completed records for today if empty
+
         if (parsed.customers && Array.isArray(parsed.customers)) {
-          const currentTodayCount = getClientsServedToday(parsed.customers);
-          if (currentTodayCount === 0) {
-            const initialCompleted = INITIAL_CUSTOMERS.filter((c) => c.status === 'done');
-            parsed.customers = [...initialCompleted, ...parsed.customers.filter((c) => c.status !== 'done')];
-          }
+          // Strip any known mock seed records (tokens from v5/v6 INITIAL_SERVED_TODAY + Y-01).
+          // Genuine completed records (real customers marked Done by staff) are preserved.
+          parsed.customers = parsed.customers.filter(
+            (c) => !MOCK_SEED_TOKENS.has(c.token)
+          );
         } else {
           parsed.customers = INITIAL_CUSTOMERS;
         }
 
+        // Fix stale Ravi avatar URL if it was saved in an older format
         if (parsed.barbers) {
           parsed.barbers = parsed.barbers.map((b) =>
             b.id === 'ravi' && b.avatar && b.avatar.includes('photo-1534528741775')
@@ -322,7 +294,12 @@ export function QueueProvider({ children }) {
   const [state, setState] = useState(getInitialState);
   const [currentUserToken, setCurrentUserTokenState] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem(USER_TOKEN_KEY) || localStorage.getItem('noir_user_token_v5') || 'S-14';
+      return (
+        localStorage.getItem(USER_TOKEN_KEY) ||
+        localStorage.getItem('noir_user_token_v6') ||
+        localStorage.getItem('noir_user_token_v5') ||
+        'S-14'
+      );
     }
     return 'S-14';
   });
@@ -373,7 +350,12 @@ export function QueueProvider({ children }) {
 
     // Storage event listener fallback (syncs across different browser windows)
     const handleStorage = (e) => {
-      if ((e.key === STORAGE_KEY || e.key === 'noir_salon_state_v5') && e.newValue) {
+      if (
+        (e.key === STORAGE_KEY ||
+          e.key === 'noir_salon_state_v6' ||
+          e.key === 'noir_salon_state_v5') &&
+        e.newValue
+      ) {
         try {
           const remoteState = JSON.parse(e.newValue);
           setState(remoteState);
@@ -757,10 +739,11 @@ export function QueueProvider({ children }) {
     }));
   };
 
-  // Reset to default test data
+  // Reset to clean demo data — no fake completed records.
+  // After reset the Clients Served Today counter will be 0.
   const resetQueueData = () => {
     updateAndBroadcastState({
-      customers: INITIAL_CUSTOMERS,
+      customers: INITIAL_CUSTOMERS,   // contains only waiting/in-chair records
       barbers: INITIAL_BARBERS,
       isQueueOpen: true,
       newlyCalledToken: null,
